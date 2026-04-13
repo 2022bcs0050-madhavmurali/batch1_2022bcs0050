@@ -13,8 +13,6 @@ jobs:
           python-version: "3.10"
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Run model evaluation
-        run: python train.py
       - name: Build docker image
         run: docker build -t batch1_2022bcs0050 .
       - name: run docker image
