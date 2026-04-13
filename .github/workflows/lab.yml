@@ -1,0 +1,25 @@
+name: LAB_EXAM
+on: push
+
+jobs:
+  evaluate-model:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run model evaluation
+        run: python train.py
+      - name: Build docker image
+        run: docker build -t batch1_2022bcs0050 .
+      - name: run docker image
+        run: docker run -d -p 8000:8000 batch1_2022bcs0050
+      - name: Test Inference and get metric
+        run: curl -X POST http://0.0.0.0:8000/predict -d {"input":"hello"}
+      - name: push to docker hub
+        run: docker push ${{vars.DOCKER_USERNAME}}/batch1_2022bcs0050:latest
